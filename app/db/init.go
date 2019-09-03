@@ -16,6 +16,9 @@ func Connect(t string, u string) *gorm.DB {
 	return Session
 }
 
-func Migrate(Session *gorm.DB) {
+func Migrate() {
+	if Session == nil {
+		panic("Must connect database first")
+	}
 	Session.AutoMigrate(&model.User{})
 }

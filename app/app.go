@@ -14,8 +14,8 @@ func NewApp() *iris.Application {
 	app.Use(recover.New())
 	app.Use(logger.New())
 
-	Session := db.Connect("sqlite3", "db.sqlite")
-	db.Migrate(Session)
+	db.Connect("sqlite3", "db.sqlite")
+	db.Migrate()
 
 	app.PartyFunc("/api", api.RegisterUrls)
 	return app
