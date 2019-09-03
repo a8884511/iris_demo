@@ -2,6 +2,7 @@ package model
 
 import (
 	"github.com/jinzhu/gorm"
+	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
@@ -26,10 +27,16 @@ func (u *User) SetPassword(rawPassword string) {
 }
 
 func (u User) CheckPassword(rawPassword string) bool {
-	return MakePassword(rawPassword) == u.PasswordHash
+	if err := bcrypt.CompareHashAndPassword([]byte(u.PasswordHash), []byte(rawPassword)); err != nil {
+		return false
+	}
+	return true
 }
 
 func MakePassword(rawPassword string) string {
-	//TODO 密码哈希值+盐值
-	return rawPassword
+	passwordHash, err := bcrypt.GenerateFromPassword([]byte(rawPassword), bcrypt.DefaultCost)
+	if err != nil {
+		panic("Failed to hash password")
+	}
+	return string(passwordHash)
 }

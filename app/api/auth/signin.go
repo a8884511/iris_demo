@@ -49,5 +49,6 @@ func SignInApi(ctx iris.Context) {
 		ctx.JSON(iris.Map{"message": "Generate token error"})
 		return
 	}
+	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(iris.Map{"message": "Sign In", "token": tokenStr})
 }

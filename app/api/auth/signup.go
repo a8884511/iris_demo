@@ -30,8 +30,15 @@ func SignUpApi(ctx iris.Context) {
 		ctx.JSON(iris.Map{"message": err.Error()})
 		return
 	}
-	user := model.User{Username: signUpForm.Username}
+	var user model.User
+	if result := db.Session.First(&user, "username = ?", signUpForm.Username); result.Error == nil {
+		ctx.StatusCode(iris.StatusBadRequest)
+		ctx.JSON(iris.Map{"message": "Username already exists"})
+		return
+	}
+	user = model.User{Username: signUpForm.Username}
 	user.SetPassword(signUpForm.Password)
 	db.Session.Create(&user)
+	ctx.StatusCode(iris.StatusCreated)
 	ctx.JSON(iris.Map{"message": "Sign Up"})
 }
