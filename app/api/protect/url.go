@@ -6,6 +6,7 @@ import (
 )
 
 func JWTRequiredApi(ctx iris.Context) {
+	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(iris.Map{"message": "Hello World"})
 }
 

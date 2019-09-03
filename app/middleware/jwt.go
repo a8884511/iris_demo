@@ -14,5 +14,7 @@ var JWTMiddleware = jwtMiddleware.New(jwtMiddleware.Config{
 })
 
 func JWTErrorHandler(ctx iris.Context, err error) {
+	//TODO 401/403
+	ctx.StatusCode(iris.StatusForbidden)
 	ctx.JSON(iris.Map{"message": err.Error()})
 }

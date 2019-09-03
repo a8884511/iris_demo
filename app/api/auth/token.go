@@ -34,5 +34,6 @@ func TokenCheckApi(ctx iris.Context) {
 		ctx.JSON(iris.Map{"message": err.Error()})
 		return
 	}
+	ctx.StatusCode(iris.StatusOK)
 	ctx.JSON(claim)
 }
