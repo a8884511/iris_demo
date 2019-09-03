@@ -7,7 +7,12 @@ import (
 	"time"
 )
 
-var JWTKey = []byte("you-will-never-guess")
+var (
+	JWTSecretKey       = []byte("you-will-never-guess")
+	JWTSecretKeyGetter = func(token *jwt.Token) (interface{}, error) {
+		return JWTSecretKey, nil
+	}
+)
 
 func GenerateJWToken(user model.User) (string, error) {
 	claim := jwt.MapClaims{
@@ -18,18 +23,12 @@ func GenerateJWToken(user model.User) (string, error) {
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
 	//TODO 配置管理
-	tokenStr, err := token.SignedString(JWTKey)
+	tokenStr, err := token.SignedString(JWTSecretKey)
 	return tokenStr, err
 }
 
-func secret() jwt.Keyfunc {
-	return func(token *jwt.Token) (interface{}, error) {
-		return JWTKey, nil
-	}
-}
-
 func ParseJWToken(tokenStr string) (jwt.Claims, error) {
-	token, err := jwt.Parse(tokenStr, secret())
+	token, err := jwt.Parse(tokenStr, JWTSecretKeyGetter)
 	if err != nil {
 		err = errors.New("Cannot parse token")
 		return nil, err
