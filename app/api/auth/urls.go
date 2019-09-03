@@ -9,5 +9,6 @@ func RegisterUrls(AuthParty iris.Party) {
 	{
 		AuthParty.Post("/sign_in", SignInApi)
 		AuthParty.Post("/sign_up", SignUpApi)
+		AuthParty.Post("/token_check", TokenCheckApi)
 	}
 }

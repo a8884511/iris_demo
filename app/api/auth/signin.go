@@ -3,6 +3,7 @@ package auth
 import (
 	"Goo/app/db"
 	"Goo/app/model"
+	"Goo/app/util"
 	"github.com/kataras/iris"
 	"gopkg.in/go-playground/validator.v9"
 )
@@ -31,19 +32,22 @@ func SignInApi(ctx iris.Context) {
 		ctx.JSON(iris.Map{"message": err.Error()})
 		return
 	}
-
 	var user model.User
 	if result := db.Session.First(&user, "username = ?", signInForm.Username); result.Error != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(iris.Map{"message": "Username is incorrect."})
 		return
 	}
-
 	if !user.CheckPassword(signInForm.Password) {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(iris.Map{"message": "Password is incorrect."})
 		return
 	}
-
-	ctx.JSON(iris.Map{"message": "Sign In"})
+	tokenStr, err := util.GenerateJWToken(user)
+	if err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(iris.Map{"message": "Generate token error."})
+		return
+	}
+	ctx.JSON(iris.Map{"message": "Sign In", "token": tokenStr})
 }
