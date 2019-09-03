@@ -3,11 +3,11 @@ package middleware
 import (
 	"Goo/app/util"
 	"github.com/dgrijalva/jwt-go"
-	jwtmiddleware "github.com/iris-contrib/middleware/jwt"
+	jwtMiddleware "github.com/iris-contrib/middleware/jwt"
 	"github.com/kataras/iris"
 )
 
-var JWTMiddleware = jwtmiddleware.New(jwtmiddleware.Config{
+var JWTMiddleware = jwtMiddleware.New(jwtMiddleware.Config{
 	ValidationKeyGetter: util.JWTSecretKeyGetter,
 	ErrorHandler:        JWTErrorHandler,
 	SigningMethod:       jwt.SigningMethodHS256,
