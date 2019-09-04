@@ -4,6 +4,7 @@ require (
 	github.com/Joker/jade v1.0.0 // indirect
 	github.com/Shopify/goreferrer v0.0.0-20181106222321-ec9c9a553398 // indirect
 	github.com/aymerick/raymond v2.0.2+incompatible // indirect
+	github.com/casbin/casbin v1.9.1
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
@@ -24,6 +25,7 @@ require (
 	github.com/klauspost/compress v1.8.1 // indirect
 	github.com/klauspost/cpuid v1.2.1 // indirect
 	github.com/leodido/go-urn v1.1.0 // indirect
+	github.com/mattn/go-sqlite3 v1.10.0
 	github.com/microcosm-cc/bluemonday v1.0.2 // indirect
 	github.com/ryanuber/columnize v2.1.0+incompatible // indirect
 	github.com/shurcooL/sanitized_anchor_name v1.0.0 // indirect

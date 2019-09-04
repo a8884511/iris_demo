@@ -1,7 +1,7 @@
 #folder
 .idea/
 .vscode/
-logs/
+log/
 dist/
 tmp/
 upload/

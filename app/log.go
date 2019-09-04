@@ -38,7 +38,7 @@ func todayFileName() string {
 
 func newLogFile() *os.File {
 	fileName := todayFileName()
-	fileFolder := "logs"
+	fileFolder := "log"
 	exist, err := util.PathExist(fileFolder)
 	if !exist {
 		err = os.Mkdir(fileFolder, os.ModePerm)

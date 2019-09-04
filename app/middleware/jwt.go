@@ -7,11 +7,13 @@ import (
 	"github.com/kataras/iris"
 )
 
-var JWTMiddleware = jwtMiddleware.New(jwtMiddleware.Config{
-	ValidationKeyGetter: util.JWTSecretKeyGetter,
-	ErrorHandler:        JWTErrorHandler,
-	SigningMethod:       jwt.SigningMethodHS256,
-})
+var JWTMiddleware = func(ctx iris.Context) {
+	jwtMiddleware.New(jwtMiddleware.Config{
+		ValidationKeyGetter: util.JWTSecretKeyGetter,
+		ErrorHandler:        JWTErrorHandler,
+		SigningMethod:       jwt.SigningMethodHS256,
+	}).Serve(ctx)
+}
 
 func JWTErrorHandler(ctx iris.Context, err error) {
 	ctx.StatusCode(iris.StatusForbidden)

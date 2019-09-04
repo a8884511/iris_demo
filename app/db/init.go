@@ -3,6 +3,7 @@ package db
 import (
 	"Goo/app/model"
 	"github.com/jinzhu/gorm"
+	_ "github.com/mattn/go-sqlite3"
 )
 
 var Session *gorm.DB

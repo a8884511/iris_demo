@@ -11,7 +11,7 @@ func JWTRequiredApi(ctx iris.Context) {
 }
 
 func RegisterUrls(ProtectParty iris.Party) {
-	ProtectParty.Use(middleware.JWTMiddleware.Serve)
+	ProtectParty.Use(middleware.JWTMiddleware, middleware.ACLMiddleware)
 	{
 		ProtectParty.Get("/jwt_required", JWTRequiredApi)
 	}
