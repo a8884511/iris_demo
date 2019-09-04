@@ -1,6 +1,10 @@
 #folder
 .idea/
 .vscode/
+logs/
+dist/
+tmp/
+upload/
 
 #db
 db.sqlite

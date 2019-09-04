@@ -18,11 +18,18 @@ func GenerateJWToken(user model.User) (string, error) {
 	claim := jwt.MapClaims{
 		"id":       user.ID,
 		"username": user.Username,
-		"nbf":      time.Now().Unix(),
-		"iat":      time.Now().Unix(),
+		//Token签发者，格式是区分大小写的字符串或者uri，用于唯一标识签发token的一方。
+		"iss": "Datagrand",
+		//Token的主体，即它的所有人，格式是区分大小写的字符串或者uri。
+		"sub": "Anyone who is a datagrand user",
+		//指定Token在nbf时间之前不能使用，即token开始生效的时间，格式为时间戳。
+		"nbf": time.Now().Unix(),
+		//Token的签发时间，格式为时间戳。
+		"iat": time.Now().Unix(),
+		//Token的过期时间，格式为时间戳。
+		"exp": time.Now().Add(time.Hour * time.Duration(24)).Unix(),
 	}
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
-	//TODO 配置管理
 	tokenStr, err := token.SignedString(JWTSecretKey)
 	return tokenStr, err
 }

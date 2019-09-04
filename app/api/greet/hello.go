@@ -1,6 +1,8 @@
 package greet
 
-import "github.com/kataras/iris"
+import (
+	"github.com/kataras/iris"
+)
 
 func HelloApi(ctx iris.Context) {
 	ctx.StatusCode(iris.StatusOK)

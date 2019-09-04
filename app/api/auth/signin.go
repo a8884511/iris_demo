@@ -13,7 +13,6 @@ type SignInForm struct {
 	Password string `json:"password" validate:"required"`
 }
 
-//TODO 封装校验函数
 func SignInApi(ctx iris.Context) {
 	validate := validator.New()
 	var signInForm SignInForm
@@ -38,7 +37,7 @@ func SignInApi(ctx iris.Context) {
 		ctx.JSON(iris.Map{"message": "Username is incorrect"})
 		return
 	}
-	if !user.CheckPassword(signInForm.Password) {
+	if err := user.CheckPassword(signInForm.Password); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(iris.Map{"message": "Password is incorrect"})
 		return

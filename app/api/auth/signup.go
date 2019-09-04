@@ -37,7 +37,11 @@ func SignUpApi(ctx iris.Context) {
 		return
 	}
 	user = model.User{Username: signUpForm.Username}
-	user.SetPassword(signUpForm.Password)
+	if err := user.SetPassword(signUpForm.Password); err != nil {
+		ctx.StatusCode(iris.StatusInternalServerError)
+		ctx.JSON(iris.Map{"message": "Failed to set password"})
+		return
+	}
 	db.Session.Create(&user)
 	ctx.StatusCode(iris.StatusCreated)
 	ctx.JSON(iris.Map{"message": "Sign Up"})
