@@ -1,18 +1,18 @@
 package model
 
 import (
-	"github.com/jinzhu/gorm"
 	"golang.org/x/crypto/bcrypt"
 	"time"
 )
 
 type User struct {
-	gorm.Model
+	BaseModel
 	Username     string `gorm:"UNIQUE; NOT NULL"`
 	PasswordHash string
 	IsActive     bool
 	Nickname     string
 	Birthday     *time.Time
+	GroupID      uint
 }
 
 func (u User) TableName() string {

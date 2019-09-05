@@ -4,11 +4,11 @@ import (
 	"github.com/kataras/iris"
 )
 
-func RegisterUrls(AuthParty iris.Party) {
-	AuthParty.Use()
+func RegisterUrls(party iris.Party) {
+	party.Use()
 	{
-		AuthParty.Post("/sign_in", SignInApi)
-		AuthParty.Post("/sign_up", SignUpApi)
-		AuthParty.Post("/token_check", TokenCheckApi)
+		party.Post("/sign_in", SignInApi)
+		party.Post("/sign_up", SignUpApi)
+		party.Post("/token_check", TokenCheckApi)
 	}
 }

@@ -6,9 +6,7 @@ import (
 	"github.com/casbin/gorm-adapter/v2"
 )
 
-var (
-	Enforcer *casbin.Enforcer
-)
+var Enforcer *casbin.Enforcer
 
 func CasbinInitialize() {
 	adapter, err := gormadapter.NewAdapterByDB(db.Session)

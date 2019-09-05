@@ -14,13 +14,13 @@ type SignUpForm struct {
 
 func SignUpApi(ctx iris.Context) {
 	validate := validator.New()
-	var signUpForm SignUpForm
-	if err := ctx.ReadJSON(&signUpForm); err != nil {
+	var form SignUpForm
+	if err := ctx.ReadJSON(&form); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(iris.Map{"message": err.Error()})
 		return
 	}
-	if err := validate.Struct(signUpForm); err != nil {
+	if err := validate.Struct(form); err != nil {
 		if _, ok := err.(*validator.InvalidValidationError); ok {
 			ctx.StatusCode(iris.StatusInternalServerError)
 			ctx.JSON(iris.Map{"message": err.Error()})
@@ -31,13 +31,13 @@ func SignUpApi(ctx iris.Context) {
 		return
 	}
 	var user model.User
-	if result := db.Session.First(&user, "username = ?", signUpForm.Username); result.Error == nil {
+	if result := db.Session.First(&user, "username = ?", form.Username); result.Error == nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(iris.Map{"message": "Username already exists"})
 		return
 	}
-	user = model.User{Username: signUpForm.Username}
-	if err := user.SetPassword(signUpForm.Password); err != nil {
+	user = model.User{Username: form.Username}
+	if err := user.SetPassword(form.Password); err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
 		ctx.JSON(iris.Map{"message": "Failed to set password"})
 		return

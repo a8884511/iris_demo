@@ -1,4 +1,4 @@
-package greet
+package admin
 
 import (
 	"github.com/kataras/iris"
@@ -7,6 +7,6 @@ import (
 func RegisterUrls(party iris.Party) {
 	party.Use()
 	{
-		party.Get("/hello", HelloApi)
+		party.Get("/groups", GroupListApi)
 	}
 }

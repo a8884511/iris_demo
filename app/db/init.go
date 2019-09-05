@@ -21,5 +21,8 @@ func Migrate() {
 	if Session == nil {
 		panic("Must connect database first")
 	}
+	Session.AutoMigrate(&model.Group{})
 	Session.AutoMigrate(&model.User{})
+	Session.AutoMigrate(&model.Role{})
+	Session.AutoMigrate(&model.Api{})
 }
