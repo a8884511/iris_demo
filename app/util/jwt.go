@@ -1,9 +1,11 @@
 package util
 
 import (
+	"Goo/app/db"
 	"Goo/app/model"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/juju/errors"
+	"github.com/kataras/iris"
 	"time"
 )
 
@@ -50,4 +52,22 @@ func ParseJWToken(tokenStr string) (jwt.Claims, error) {
 		return nil, err
 	}
 	return claim, err
+}
+
+func GetCurrentClaims(ctx iris.Context) (jwt.Claims, error) {
+	token := ctx.Values().Get("jwt")
+	if token == nil {
+		return nil, errors.New("Cannot get jwt claims")
+	}
+	return token.(*jwt.Token).Claims, nil
+}
+
+func GetCurrentUser(ctx iris.Context) (user model.User, err error) {
+	claims, err := GetCurrentClaims(ctx)
+	if err != nil {
+		return
+	}
+	userID := claims.(jwt.MapClaims)["id"]
+	result := db.Session.First(&user, "id = ?", userID)
+	return user, result.Error
 }

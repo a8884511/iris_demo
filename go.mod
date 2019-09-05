@@ -5,6 +5,9 @@ require (
 	github.com/Shopify/goreferrer v0.0.0-20181106222321-ec9c9a553398 // indirect
 	github.com/aymerick/raymond v2.0.2+incompatible // indirect
 	github.com/casbin/casbin v1.9.1
+	github.com/casbin/casbin/v2 v2.0.2
+	github.com/casbin/gorm-adapter v1.0.0 // indirect
+	github.com/casbin/gorm-adapter/v2 v2.0.0
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/eknkc/amber v0.0.0-20171010120322-cdade1c07385 // indirect
 	github.com/fatih/structs v1.1.0 // indirect
