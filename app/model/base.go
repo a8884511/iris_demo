@@ -9,4 +9,5 @@ type BaseModel struct {
 	UpdatedBy uint       `json:"updated_by"`
 	UpdatedAt time.Time  `json:"updated_at"`
 	DeletedAt *time.Time `sql:"index" json:"deleted_at"`
+	Desc      string     `json:"desc"`
 }

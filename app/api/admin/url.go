@@ -10,5 +10,7 @@ func RegisterUrls(party iris.Party) {
 		party.Get("/groups", GroupListApi)
 		party.Post("/groups", GroupCreateApi)
 		party.Get("/groups/{id:uint}", GroupDetailApi)
+		party.Put("/groups/{id:uint}", GroupUpdateApi)
+		party.Delete("/groups/{id:uint}", GroupDeleteApi)
 	}
 }

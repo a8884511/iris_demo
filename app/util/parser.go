@@ -14,7 +14,7 @@ func GetPagination(ctx iris.Context) (pagination Pagination, err error) {
 	offset := ctx.URLParamIntDefault("offset", 0)
 	limit := ctx.URLParamIntDefault("limit", 10)
 	if offset < 0 || limit < 0 {
-		err = errors.New("Query params 'offset' or 'limit' must greater than zero")
+		err = errors.New("query params 'offset' or 'limit' must greater than zero")
 		return
 	}
 	pagination = Pagination{

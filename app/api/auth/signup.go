@@ -33,16 +33,19 @@ func SignUpApi(ctx iris.Context) {
 	var user model.User
 	if result := db.Session.First(&user, "username = ?", form.Username); result.Error == nil {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(iris.Map{"message": "Username already exists"})
+		ctx.JSON(iris.Map{"message": "username already exists"})
 		return
 	}
 	user = model.User{Username: form.Username}
 	if err := user.SetPassword(form.Password); err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON(iris.Map{"message": "Failed to set password"})
+		ctx.JSON(iris.Map{"message": "failed to set password"})
 		return
 	}
 	db.Session.Create(&user)
 	ctx.StatusCode(iris.StatusCreated)
-	ctx.JSON(iris.Map{"message": "Sign Up"})
+	ctx.JSON(iris.Map{
+		"message": "sign up",
+		"result":  user,
+	})
 }

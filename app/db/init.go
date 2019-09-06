@@ -12,14 +12,17 @@ func Connect(t string, u string) *gorm.DB {
 	var err error
 	Session, err = gorm.Open(t, u)
 	if err != nil {
-		panic("Failed to connect database")
+		panic("failed to connect database")
 	}
+
+	Session.LogMode(true) //show sql
+
 	return Session
 }
 
 func Migrate() {
 	if Session == nil {
-		panic("Must connect database first")
+		panic("must connect database first")
 	}
 	Session.AutoMigrate(&model.Group{})
 	Session.AutoMigrate(&model.User{})

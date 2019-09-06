@@ -34,20 +34,20 @@ func SignInApi(ctx iris.Context) {
 	var user model.User
 	if result := db.Session.First(&user, "username = ?", form.Username); result.Error != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(iris.Map{"message": "Username does not exist"})
+		ctx.JSON(iris.Map{"message": "username does not exist"})
 		return
 	}
 	if err := user.CheckPassword(form.Password); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(iris.Map{"message": "Password is incorrect"})
+		ctx.JSON(iris.Map{"message": "password is incorrect"})
 		return
 	}
 	tokenStr, err := util.GenerateJWToken(user)
 	if err != nil {
 		ctx.StatusCode(iris.StatusInternalServerError)
-		ctx.JSON(iris.Map{"message": "Generate token error"})
+		ctx.JSON(iris.Map{"message": "generate token error"})
 		return
 	}
 	ctx.StatusCode(iris.StatusOK)
-	ctx.JSON(iris.Map{"message": "Sign In", "token": tokenStr})
+	ctx.JSON(iris.Map{"message": "sign in", "token": tokenStr})
 }

@@ -3,9 +3,9 @@ package app
 import "github.com/kataras/iris"
 
 func NotFound(ctx iris.Context) {
-	ctx.JSON(iris.Map{"message": "Not Found"})
+	ctx.JSON(iris.Map{"message": "not found"})
 }
 
 func InternalServerError(ctx iris.Context) {
-	ctx.JSON(iris.Map{"message": "Internal Server Error"})
+	ctx.JSON(iris.Map{"message": "internal server error"})
 }
