@@ -14,12 +14,12 @@ package model
 //}
 //Role.GroupID == Group.ID
 
-//角色名唯一，可以加上不同组的前缀
 type Role struct {
-	BaseModel
-	Name    string
-	GroupID uint
-	Group   Group `gorm:"foreignkey:GroupID; association_foreignkey:ID"`
+	Base
+	Name    string `gorm:"NOT NULL" json:"name"`
+	GroupID uint   `json:"group_id"`
+	Group   Group  `gorm:"foreignkey:GroupID; association_foreignkey:ID" json:"-"`
+	Apis    []Api  `gorm:"foreignkey:RoleID; association_foreignkey:ID" json:"-"`
 }
 
 func (r Role) TableName() string {
