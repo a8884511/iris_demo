@@ -7,12 +7,12 @@ import (
 
 type User struct {
 	BaseModel
-	Username     string `gorm:"UNIQUE; NOT NULL"`
-	PasswordHash string
-	IsActive     bool
-	Nickname     string
-	Birthday     *time.Time
-	GroupID      uint
+	Username     string     `gorm:"UNIQUE; NOT NULL" json:"username"`
+	PasswordHash string     `json:"-"`
+	IsActive     bool       `json:"is_active"`
+	Nickname     string     `json:"nickname"`
+	Birthday     *time.Time `json:"birthday"`
+	GroupID      uint       `json:"group_id"`
 }
 
 func (u User) TableName() string {

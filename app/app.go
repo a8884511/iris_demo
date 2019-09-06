@@ -30,6 +30,10 @@ func NewApp() (*iris.Application, func()) {
 	//routes
 	app.PartyFunc("/api", api.RegisterUrls)
 
+	//error handlers
+	app.OnErrorCode(iris.StatusNotFound, NotFound)
+	app.OnErrorCode(iris.StatusInternalServerError, InternalServerError)
+
 	onExit := func() {
 		fileLoggerCloseFunc()
 	}

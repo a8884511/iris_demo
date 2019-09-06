@@ -34,7 +34,7 @@ func SignInApi(ctx iris.Context) {
 	var user model.User
 	if result := db.Session.First(&user, "username = ?", form.Username); result.Error != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
-		ctx.JSON(iris.Map{"message": "Username is incorrect"})
+		ctx.JSON(iris.Map{"message": "Username does not exist"})
 		return
 	}
 	if err := user.CheckPassword(form.Password); err != nil {

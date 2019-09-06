@@ -12,13 +12,13 @@ type TokenForm struct {
 
 func TokenCheckApi(ctx iris.Context) {
 	validate := validator.New()
-	var tokenForm TokenForm
-	if err := ctx.ReadJSON(&tokenForm); err != nil {
+	var form TokenForm
+	if err := ctx.ReadJSON(&form); err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(iris.Map{"message": err.Error()})
 		return
 	}
-	if err := validate.Struct(tokenForm); err != nil {
+	if err := validate.Struct(form); err != nil {
 		if _, ok := err.(*validator.InvalidValidationError); ok {
 			ctx.StatusCode(iris.StatusInternalServerError)
 			ctx.JSON(iris.Map{"message": err.Error()})
@@ -28,7 +28,7 @@ func TokenCheckApi(ctx iris.Context) {
 		ctx.JSON(iris.Map{"message": err.Error()})
 		return
 	}
-	claim, err := util.ParseJWToken(tokenForm.Token)
+	claim, err := util.ParseJWToken(form.Token)
 	if err != nil {
 		ctx.StatusCode(iris.StatusBadRequest)
 		ctx.JSON(iris.Map{"message": err.Error()})
