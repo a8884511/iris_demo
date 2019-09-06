@@ -8,12 +8,12 @@ import (
 	"github.com/kataras/iris"
 )
 
-func RegisterUrls(RootParty iris.Party) {
-	RootParty.Use()
+func RegisterUrls(party iris.Party) {
+	party.Use()
 	{
-		RootParty.PartyFunc("/greet", greet.RegisterUrls)
-		RootParty.PartyFunc("/auth", auth.RegisterUrls)
-		RootParty.PartyFunc("/protect", protect.RegisterUrls)
-		RootParty.PartyFunc("/admin", admin.RegisterUrls)
+		party.PartyFunc("/greet", greet.RegisterUrls)
+		party.PartyFunc("/auth", auth.RegisterUrls)
+		party.PartyFunc("/protect", protect.RegisterUrls)
+		party.PartyFunc("/admin", admin.RegisterUrls)
 	}
 }
