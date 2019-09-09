@@ -15,6 +15,7 @@ type User struct {
 	Birthday     *time.Time `json:"birthday"`
 	GroupID      uint       `json:"group_id"`
 	Group        Group      `gorm:"foreignkey:GroupID; association_foreignkey:ID" json:"-"`
+	Roles        []*Role    `gorm:"many2many:user_roles" json:"-"`
 }
 
 func (u User) TableName() string {

@@ -14,22 +14,19 @@ var CasbinMiddleware = func(ctx iris.Context) {
 		ctx.StopExecution()
 		return
 	}
-
-	//fmt.Println(user.Username)
-	//fmt.Println(ctx.Path())
-	//fmt.Println(ctx.Method())
-
-	ok, err := plugin.Enforcer.Enforce(user.Username, ctx.Path(), ctx.Method())
-	if err != nil {
-		CasbinErrorHandler(ctx, err)
-		ctx.StopExecution()
-		return
-	}
-	if !ok {
-		err := errors.New("No Permission")
-		CasbinErrorHandler(ctx, err)
-		ctx.StopExecution()
-		return
+	if *(user.IsSuperuser) != true {
+		ok, err := plugin.Enforcer.Enforce(user.ID, user.GroupID, ctx.Path(), ctx.Method())
+		if err != nil {
+			CasbinErrorHandler(ctx, err)
+			ctx.StopExecution()
+			return
+		}
+		if !ok {
+			err := errors.New("No Permission")
+			CasbinErrorHandler(ctx, err)
+			ctx.StopExecution()
+			return
+		}
 	}
 	ctx.Next()
 }

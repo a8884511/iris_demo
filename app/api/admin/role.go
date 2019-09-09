@@ -25,6 +25,11 @@ func GetRoleList(pagination util.Pagination) (roles []model.Role, count uint, er
 	return roles, count, result.Error
 }
 
+func GetApiListByIDS(ids []uint) (apis []*model.Api, err error) {
+	result := db.Session.Find(&apis, "id IN (?)", ids)
+	return apis, result.Error
+}
+
 func RoleListApi(ctx iris.Context) {
 	var roles []model.Role
 	var count uint
@@ -50,6 +55,7 @@ func RoleListApi(ctx iris.Context) {
 type RoleCreateForm struct {
 	Name    string `json:"name" validate:"required"`
 	GroupID uint   `json:"group_id"`
+	ApiIDS  []uint `json:"api_ids"`
 	Desc    string `json:"desc"`
 }
 
@@ -95,10 +101,23 @@ func RoleCreateApi(ctx iris.Context) {
 			return
 		}
 	}
+	if form.ApiIDS != nil {
+		apis, err := GetApiListByIDS(form.ApiIDS)
+		if err != nil {
+			ctx.StatusCode(iris.StatusBadRequest)
+			ctx.JSON(iris.Map{"message": err.Error()})
+			return
+		}
+		role.Apis = apis
+	}
 	role.UpdateStatus(map[string]interface{}{
 		"desc": form.Desc,
 	})
 	db.Session.Create(&role)
+	//db.Session.Exec("DELETE FROM casbin_rule WHERE v0 = ?", role.ID)
+	for _, api := range role.Apis {
+		db.Session.Exec("INSERT INTO casbin_rule ('p_type', 'v0', 'v1', 'v2', 'v3') VALUES (?, ?, ?, ?, ?)", "p", role.ID, role.GroupID, api.Url, api.Method)
+	}
 	ctx.StatusCode(iris.StatusCreated)
 	ctx.JSON(iris.Map{
 		"message": "created",
@@ -122,6 +141,7 @@ func RoleDetailApi(ctx iris.Context) {
 type RoleUpdateForm struct {
 	Name    string `json:"name"`
 	GroupID uint   `json:"group_id"`
+	ApiIDS  []uint `json:"api_ids"`
 	Desc    string `json:"desc"`
 }
 
@@ -172,10 +192,23 @@ func RoleUpdateApi(ctx iris.Context) {
 			return
 		}
 	}
+	if form.ApiIDS != nil {
+		apis, err := GetApiListByIDS(form.ApiIDS)
+		if err != nil {
+			ctx.StatusCode(iris.StatusBadRequest)
+			ctx.JSON(iris.Map{"message": err.Error()})
+			return
+		}
+		role.Apis = apis
+	}
 	role.UpdateStatus(map[string]interface{}{
 		"desc": form.Desc,
 	})
 	db.Session.Model(&role).Update(form)
+	db.Session.Exec("DELETE FROM casbin_rule WHERE v0 = ?", role.ID)
+	for _, api := range role.Apis {
+		db.Session.Exec("INSERT INTO casbin_rule ('p_type', 'v0', 'v1', 'v2', 'v3') VALUES (?, ?, ?, ?, ?)", "p", role.ID, role.GroupID, api.Url, api.Method)
+	}
 	ctx.StatusCode(iris.StatusCreated)
 	ctx.JSON(iris.Map{
 		"message": "updated",

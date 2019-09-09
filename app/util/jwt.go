@@ -62,5 +62,9 @@ func GetCurrentUser(ctx iris.Context) (user model.User, err error) {
 		return
 	}
 	result := db.Session.First(&user, "id = ?", claims["userid"])
+	if *(user.IsActive) != true {
+		err = errors.New("User is not active")
+		return
+	}
 	return user, result.Error
 }

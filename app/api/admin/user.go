@@ -26,6 +26,11 @@ func GetUserList(pagination util.Pagination) (users []model.User, count uint, er
 	return users, count, result.Error
 }
 
+func GetRoleListByIDS(ids []uint) (roles []*model.Role, err error) {
+	result := db.Session.Find(&roles, "id IN (?)", ids)
+	return roles, result.Error
+}
+
 func UserListApi(ctx iris.Context) {
 	var users []model.User
 	var count uint
@@ -56,6 +61,7 @@ type UserCreateForm struct {
 	Nickname    string     `json:"nickname"`
 	Birthday    *time.Time `json:"birthday"`
 	GroupID     uint       `json:"group_id"`
+	RoleIDS     []uint     `json:"role_ids"`
 	Desc        string     `json:"desc"`
 }
 
@@ -106,10 +112,23 @@ func UserCreateApi(ctx iris.Context) {
 			return
 		}
 	}
+	if form.RoleIDS != nil {
+		roles, err := GetRoleListByIDS(form.RoleIDS)
+		if err != nil {
+			ctx.StatusCode(iris.StatusBadRequest)
+			ctx.JSON(iris.Map{"message": err.Error()})
+			return
+		}
+		user.Roles = roles
+	}
 	user.UpdateStatus(map[string]interface{}{
 		"desc": form.Desc,
 	})
 	db.Session.Create(&user)
+	//db.Session.Exec("DELETE FROM casbin_rule WHERE v0 = ?", user.ID)
+	for _, role := range user.Roles {
+		db.Session.Exec("INSERT INTO casbin_rule ('p_type', 'v0', 'v1', 'v2') VALUES (?, ?, ?, ?)", "g", user.ID, role.ID, user.GroupID)
+	}
 	ctx.StatusCode(iris.StatusCreated)
 	ctx.JSON(iris.Map{
 		"message": "created",
@@ -138,6 +157,7 @@ type UserUpdateForm struct {
 	Nickname    string     `json:"nickname"`
 	Birthday    *time.Time `json:"birthday"`
 	GroupID     uint       `json:"group_id"`
+	RoleIDS     []uint     `json:"role_ids"`
 	Desc        string     `json:"desc"`
 }
 
@@ -195,10 +215,23 @@ func UserUpdateApi(ctx iris.Context) {
 			return
 		}
 	}
+	if form.RoleIDS != nil {
+		roles, err := GetRoleListByIDS(form.RoleIDS)
+		if err != nil {
+			ctx.StatusCode(iris.StatusBadRequest)
+			ctx.JSON(iris.Map{"message": err.Error()})
+			return
+		}
+		user.Roles = roles
+	}
 	user.UpdateStatus(map[string]interface{}{
 		"desc": form.Desc,
 	})
 	db.Session.Model(&user).Update(form)
+	db.Session.Exec("DELETE FROM casbin_rule WHERE v0 = ?", user.ID)
+	for _, role := range user.Roles {
+		db.Session.Exec("INSERT INTO casbin_rule ('p_type', 'v0', 'v1', 'v2') VALUES (?, ?, ?, ?)", "g", user.ID, role.ID, user.GroupID)
+	}
 	ctx.StatusCode(iris.StatusCreated)
 	ctx.JSON(iris.Map{
 		"message": "updated",

@@ -16,10 +16,11 @@ package model
 
 type Role struct {
 	Base
-	Name    string `gorm:"NOT NULL" json:"name"`
-	GroupID uint   `json:"group_id"`
-	Group   Group  `gorm:"foreignkey:GroupID; association_foreignkey:ID" json:"-"`
-	Apis    []Api  `gorm:"foreignkey:RoleID; association_foreignkey:ID" json:"-"`
+	Name    string  `gorm:"NOT NULL" json:"name"`
+	GroupID uint    `json:"group_id"`
+	Group   Group   `gorm:"foreignkey:GroupID; association_foreignkey:ID" json:"-"`
+	Apis    []*Api  `gorm:"many2many:role_apis" json:"-"`
+	Users   []*User `gorm:"many2many:user_roles" json:"-"`
 }
 
 func (r Role) TableName() string {
